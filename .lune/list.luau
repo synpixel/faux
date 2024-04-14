@@ -2,7 +2,7 @@ local process = require("@lune/process")
 local fs = require("@lune/fs")
 local serde = require("@lune/serde")
 local stdio = require("@lune/stdio")
-local util = require("util")
+local stdioUtil = require("stdio-util")
 
 local types = table.clone(process.args)
 local input = serde.decode("json", fs.readFile("output.json"))
@@ -23,11 +23,11 @@ for _, type in types do
 	end
 
 	if #types > 1 then
-		stdio.write(`{util.color(util.style(type:upper(), "bold"), "cyan")}\n`)
+		stdio.write(`{stdioUtil.color(stdioUtil.style(type:upper(), "bold"), "cyan")}\n`)
 	end
 
 	for _, entry in input[type] do
-		stdio.write(`{if type == "users" then "@" else ""}{entry.name} {util.color("#" .. entry.id, "black")} \n`)
+		stdio.write(`{if type == "users" then "@" else ""}{entry.name} {stdioUtil.color("#" .. entry.id, "black")} \n`)
 	end
 
 	stdio.write("\n")

@@ -4,7 +4,7 @@ local serde = require("@lune/serde")
 local net = require("@lune/net")
 local stdio = require("@lune/stdio")
 local roblox = require("@lune/roblox")
-local util = require("util")
+local stdioUtil = require("stdio-util")
 
 local ROBLOSECURITY = process.args[1] or roblox.getAuthCookie(true)
 local PLACE_DETAILS_REQUEST_CHUNK_SIZE = 50
@@ -71,7 +71,7 @@ local function getUniverseIds(placeIds: { number })
 	return universeIds
 end
 
-stdio.write(`{util.color(util.style("USERS", "bold"), "cyan")}\n`)
+stdio.write(`{stdioUtil.color(stdioUtil.style("USERS", "bold"), "cyan")}\n`)
 
 do
 	local response = net.request({
@@ -90,12 +90,14 @@ do
 	output.users = merge(output.users, users)
 
 	for _, user in users do
-		stdio.write(`{util.color("Registered user", "cyan")} {user.name} {util.color("#" .. user.id, "black")}\n`)
+		stdio.write(
+			`{stdioUtil.color("Registered user", "cyan")} {user.name} {stdioUtil.color("#" .. user.id, "black")}\n`
+		)
 	end
 end
 
 stdio.write("\n")
-stdio.write(`{util.color(util.style("UNIVERSES", "bold"), "cyan")}\n`)
+stdio.write(`{stdioUtil.color(stdioUtil.style("UNIVERSES", "bold"), "cyan")}\n`)
 
 do
 	local universeIds = getUniverseIds(input.universes.places)
@@ -106,13 +108,16 @@ do
 
 	for _, universe in universes do
 		stdio.write(
-			`{util.color("Registered universe", "cyan")} {universe.name} {util.color("#" .. universe.id, "black")}\n`
+			`{stdioUtil.color("Registered universe", "cyan")} {universe.name} {stdioUtil.color(
+				"#" .. universe.id,
+				"black"
+			)}\n`
 		)
 	end
 end
 
 stdio.write("\n")
-stdio.write(`{util.color(util.style("GROUPS", "bold"), "cyan")}\n`)
+stdio.write(`{stdioUtil.color(stdioUtil.style("GROUPS", "bold"), "cyan")}\n`)
 
 do
 	local response = net.request(`https://groups.roblox.com/v2/groups?groupIds={table.concat(input.groups, ",")}`)
@@ -121,7 +126,9 @@ do
 	output.groups = merge(output.groups, groups)
 
 	for _, group in groups do
-		stdio.write(`{util.color("Registered group", "cyan")} {group.name} {util.color("#" .. group.id, "black")}\n`)
+		stdio.write(
+			`{stdioUtil.color("Registered group", "cyan")} {group.name} {stdioUtil.color("#" .. group.id, "black")}\n`
+		)
 	end
 end
 
