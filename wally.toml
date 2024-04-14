@@ -1,0 +1,12 @@
+[package]
+name = "synpixel/faux"
+version = "0.1.0"
+registry = "https://github.com/UpliftGames/wally-index"
+license = "MIT"
+authors = ["synpixel"]
+realm = "shared"
+
+exclude = ["**"]
+include = ["src", "src/*", "output.json", "default.project.json", "wally.lock", "wally.toml"]
+
+[dependencies]

@@ -1,0 +1,5 @@
+# output file
+/output.json
+
+# luau sourcemap
+/sourcemap.json

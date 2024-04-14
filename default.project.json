@@ -1,0 +1,9 @@
+{
+  "name": "faux",
+  "tree": {
+    "$path": "src",
+    "output": {
+      "$path": "output.json"
+    }
+  }
+}
