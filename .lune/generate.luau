@@ -8,6 +8,7 @@ local stdioUtil = require("stdio-util")
 
 local ROBLOSECURITY = process.args[1] or roblox.getAuthCookie(true)
 local PLACE_DETAILS_REQUEST_CHUNK_SIZE = 50
+local UNIVERSE_INFO_REQUEST_CHUNK_SIZE = 50
 
 local input = serde.decode("json", fs.readFile("input.json"))
 local output = {
@@ -16,13 +17,13 @@ local output = {
 	groups = {},
 }
 
-local function merge(...: { [any]: any }): { [any]: any }
+local function mergeList(...: { any }): { any }
 	local tables = { ... }
 	local first = table.clone(tables[1])
 
 	for i = 2, #tables do
-		for key, value in tables[i] do
-			first[key] = value
+		for _, value in tables[i] do
+			table.insert(first, value)
 		end
 	end
 
@@ -87,7 +88,7 @@ do
 	})
 	local users = net.jsonDecode(response.body).data
 
-	output.users = merge(output.users, users)
+	output.users = mergeList(output.users, users)
 
 	for _, user in users do
 		stdio.write(
@@ -100,11 +101,15 @@ stdio.write("\n")
 stdio.write(`{stdioUtil.color(stdioUtil.style("UNIVERSES", "bold"), "cyan")}\n`)
 
 do
-	local universeIds = getUniverseIds(input.universes.places)
-	local response = net.request(`https://games.roblox.com/v1/games?universeIds={table.concat(universeIds, ",")}`)
-	local universes = net.jsonDecode(response.body).data
+	local universeIdsChunks = splitArray(getUniverseIds(input.universes.places), UNIVERSE_INFO_REQUEST_CHUNK_SIZE)
+	local universes = {}
 
-	output.universes = merge(output.universes, universes)
+	for _, universeIds in universeIdsChunks do
+		local response = net.request(`https://games.roblox.com/v1/games?universeIds={table.concat(universeIds, ",")}`)
+		universes = mergeList(universes, net.jsonDecode(response.body).data)
+	end
+
+	output.universes = mergeList(output.universes, universes)
 
 	for _, universe in universes do
 		stdio.write(
@@ -123,7 +128,7 @@ do
 	local response = net.request(`https://groups.roblox.com/v2/groups?groupIds={table.concat(input.groups, ",")}`)
 	local groups = net.jsonDecode(response.body).data
 
-	output.groups = merge(output.groups, groups)
+	output.groups = mergeList(output.groups, groups)
 
 	for _, group in groups do
 		stdio.write(
