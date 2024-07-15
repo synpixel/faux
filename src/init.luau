@@ -2,20 +2,20 @@ local output = require(script.output)
 
 local random = Random.new()
 
-local function user()
+local function pickUser()
 	return output.users[random:NextInteger(1, #output.users)]
 end
 
-local function universe()
+local function pickUniverse()
 	return output.universes[random:NextInteger(1, #output.universes)]
 end
 
-local function group()
+local function pickGroup()
 	return output.groups[random:NextInteger(1, #output.groups)]
 end
 
 return {
-	user = user,
-	universe = universe,
-	group = group,
+	pickUser = pickUser,
+	pickUniverse = pickUniverse,
+	pickGroup = pickGroup,
 }
