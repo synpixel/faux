@@ -30,7 +30,7 @@ local function mergeList(...: { any }): { any }
 	return first
 end
 
-local function splitArray(array: { any }, chunkSize: number)
+local function splitArray<T>(array: { T }, chunkSize: number): { { T } }
 	local newArray = {}
 	for i = 1, #array, chunkSize do
 		table.insert(newArray, { unpack(array, i, math.min(i + chunkSize - 1, #array)) })
